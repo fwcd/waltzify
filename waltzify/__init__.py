@@ -9,7 +9,7 @@ import argparse
 def join_audio(segments: list[AudioSegment]) -> AudioSegment:
     return reduce(lambda s1, s2: s1 + s2, segments)
 
-def waltzify(audio: AudioSegment, bpm: float, bar_size: int = 4) -> AudioSegment:
+def waltzify(audio: AudioSegment, bpm: float, bar_size: int) -> AudioSegment:
     beat_ms = int(60_000 / bpm)
     beats = list(audio[::beat_ms])
     new_beats = AudioSegment.empty()
@@ -30,6 +30,7 @@ def waltzify(audio: AudioSegment, bpm: float, bar_size: int = 4) -> AudioSegment
 def main():
     parser = argparse.ArgumentParser(description='Converts a 4/4 song to 3/4')
     parser.add_argument('--bpm', '-b', required=True, type=float, help="The input audio's beats per minute.")
+    parser.add_argument('--bar-size', '-s', type=int, default=4, help="The input audio's number of beats per bar.")
     parser.add_argument('--output', '-o', type=Path, help='The output (audio) file path.')
     parser.add_argument('input', type=Path, help='The input (audio) file path.')
 
@@ -38,5 +39,5 @@ def main():
     output: Path = args.output or input.parent / f'{input.stem}-waltz.mp3'
 
     audio = AudioSegment.from_file(input)
-    audio = waltzify(audio, bpm=args.bpm)
+    audio = waltzify(audio, bpm=args.bpm, bar_size=args.bar_size)
     audio.export(output)
