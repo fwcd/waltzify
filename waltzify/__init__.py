@@ -2,6 +2,7 @@ from functools import reduce
 from pathlib import Path
 from pydub import AudioSegment
 from pydub.effects import speedup
+from tqdm import tqdm
 
 import argparse
 
@@ -19,7 +20,7 @@ def waltzify(audio: AudioSegment, bpm: float, bar_size: int = 4) -> AudioSegment
     # Map 1 - 2 - 3 - 4 -
     # to  1 - 2 - 3 4
 
-    for i in range(len(beats) // bar_size):
+    for i in tqdm(range(len(beats) // bar_size)):
         offset = i * bar_size
         new_beats += join_audio(beats[offset:offset + initial_beats])
         new_beats += speedup(join_audio(beats[offset + initial_beats:offset + bar_size]), playback_speed=remaining_beats, chunk_size=10, crossfade=5)
