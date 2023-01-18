@@ -5,6 +5,7 @@ from pydub.effects import speedup
 from tqdm import tqdm
 
 from waltzify.strategy import Strategy
+from waltzify.strategy.drop_nth import DropNthStrategy
 from waltzify.strategy.squeeze_last import SqueezeLastStrategy
 from waltzify.strategy.take_prefix import TakePrefixStrategy
 from waltzify.waltzify import waltzify
@@ -14,6 +15,7 @@ import argparse
 STRATEGIES: dict[str, Strategy] = {
     'take-prefix': TakePrefixStrategy(),
     'squeeze-last': SqueezeLastStrategy(),
+    **{f'drop-{i + 1}': DropNthStrategy(n=i) for i in range(4)},
 }
 
 def main():
