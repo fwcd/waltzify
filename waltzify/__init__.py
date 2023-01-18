@@ -29,11 +29,13 @@ def waltzify(audio: AudioSegment, bpm: float, bar_size: int = 4) -> AudioSegment
 def main():
     parser = argparse.ArgumentParser(description='Converts a 4/4 song to 3/4')
     parser.add_argument('--bpm', '-b', required=True, type=float, help="The input audio's beats per minute.")
-    parser.add_argument('--output', '-o', required=True, type=Path, help='The output (audio) file path.')
+    parser.add_argument('--output', '-o', type=Path, help='The output (audio) file path.')
     parser.add_argument('input', type=Path, help='The input (audio) file path.')
 
     args = parser.parse_args()
+    input: Path = args.input
+    output: Path = args.output or input.parent / f'{input.stem}-waltz.mp3'
 
-    audio = AudioSegment.from_file(args.input)
+    audio = AudioSegment.from_file(input)
     audio = waltzify(audio, bpm=args.bpm)
-    audio.export(args.output)
+    audio.export(output)
